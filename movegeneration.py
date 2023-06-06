@@ -22,26 +22,28 @@ def evaluate(game_state):
             eval -= piece_values[piece.piece_type]
     return eval
 
-def Minimax_Get_Move(game_state, depth, player_color):
+def Minimax_Get_Move(game_state, depth, player_color, alpha, beta):
     if depth == 0 or game_state.is_game_over():
         return None, evaluate(game_state)
 
     legal_moves = list(game_state.legal_moves)
     best_move = None
-    best_evaluation = float('-inf') if player_color == chess.WHITE else float('inf')
     for move in legal_moves:
         new_game_state = game_state.copy()
         new_game_state.push(move)
-        
-        _, evaluation = Minimax_Get_Move(new_game_state, depth - 1, player_color)
+
+        _, evaluation = Minimax_Get_Move(new_game_state, depth - 1, player_color, alpha, beta)
 
         if player_color == chess.WHITE:
-            if evaluation > best_evaluation:
-                best_evaluation = evaluation
+            if evaluation > alpha:
+                alpha = evaluation
                 best_move = move
         else:
-            if evaluation < best_evaluation:
-                best_evaluation = evaluation
+            if evaluation < beta:
+                beta = evaluation
                 best_move = move
 
-    return best_move, best_evaluation
+        if alpha >= beta:
+            break
+
+    return best_move, alpha
