@@ -1,5 +1,4 @@
 from evaluation import evaluate
-import random
 import chess
 
 def Minimax_Get_Move(game_state, depth, player_color):
