@@ -10,8 +10,7 @@ def play_game():
     board = chess.Board()
     print_board(board)
 
-    while not board.is_game_over():
-        
+    while not board.is_game_over():  
         move = Minimax_Get_Move(board, 5, chess.WHITE, -20000000, math.inf)
         board.push(move)
 
