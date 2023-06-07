@@ -11,7 +11,7 @@ def play_game():
 
     while not board.is_game_over():
         
-        move = Minimax_Get_Move(board, 5, chess.WHITE)
+        move = Minimax_Get_Move(board, 5, chess.WHITE, -inf, inf)
         board.push(move)
 
         print_board(board)
