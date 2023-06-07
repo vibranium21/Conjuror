@@ -1,5 +1,6 @@
 import chess
 import chess.svg
+import math
 from movegeneration import Minimax_Get_Move
 
 def print_board(board):
@@ -11,7 +12,7 @@ def play_game():
 
     while not board.is_game_over():
         
-        move = Minimax_Get_Move(board, 5, chess.WHITE, -inf, inf)
+        move = Minimax_Get_Move(board, 5, chess.WHITE, -20000000, math.inf)
         board.push(move)
 
         print_board(board)
