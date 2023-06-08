@@ -7,7 +7,7 @@
   -Basic Evaluation(Piece values, Piece placement)
 
   # Issues:
-  -Engine is very slow
+  -Engine is very slow at high depth(expected but still unideal)
 
   # Future-Features:
   -Playing it on Lichess
