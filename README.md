@@ -1,5 +1,5 @@
 # Bot-chocolate
-
+ Study of me playing (and judging) The bot: https://lichess.org/study/wRLbZWZU/u5FmfuBi Please note that the early games are painful.
 
   # Features:
   -Minimax and AlphaBeta pruning
