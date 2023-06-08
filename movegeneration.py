@@ -117,6 +117,13 @@ def evaluate(game_state):
             eval -= evaluate_piece(piece, square)  # Pass piece and square arguments
     return eval
 
+
+
+
+
+
+
+
 def Minimax_Get_Move(game_state, depth, player_color, alpha, beta):
     if depth == 0 or game_state.is_game_over():
         return None, evaluate(game_state)
@@ -142,3 +149,5 @@ def Minimax_Get_Move(game_state, depth, player_color, alpha, beta):
             break
 
     return best_move, alpha
+
+    
