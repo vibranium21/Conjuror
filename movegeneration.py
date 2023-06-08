@@ -1,5 +1,5 @@
 import chess
-
+import math
 piece_values = {
     chess.PAWN: 150,
     chess.ROOK: 490,
@@ -55,6 +55,7 @@ rookEvalWhite = [
 ]
 rookEvalBlack = list(reversed(rookEvalWhite))
 
+
 queenEval = [
     -20, -10, -10, -5, -5, -10, -10, -20,
     -10, 0, 0, 0, 0, 0, 0, -10,
@@ -78,6 +79,29 @@ kingEvalWhite = [
 ]
 kingEvalBlack = list(reversed(kingEvalWhite))
 
+def evaluate_piece(piece: chess.Piece, square: chess.Square):
+    mapping = []
+    if piece.piece_type == chess.PAWN:
+        mapping = white_pawn_table if piece.color == chess.WHITE else black_pawn_table
+    elif piece.piece_type == chess.KNIGHT:
+        mapping = knight_piece_square_table
+    elif piece.piece_type == chess.BISHOP:
+        mapping = bishop_table
+    elif piece.piece_type == chess.QUEEN:
+        mapping = queenEval
+    elif piece.piece_type == chess.KING:
+        mapping = kingEvalWhite if piece.color == chess.WHITE else kingEvalBlack
+    elif piece.piece_type == chess.ROOK:
+        mapping = rookEvalWhite if piece.color == chess.WHITE else rookEvalBlack
+    return mapping[square]
+
+
+
+    
+
+
+    
+
 
 def evaluate(game_state):
     eval = 0
@@ -87,8 +111,10 @@ def evaluate(game_state):
             continue
         if piece.color == chess.WHITE:
             eval += piece_values[piece.piece_type]
+            eval += evaluate_piece(piece, square)  # Pass piece and square arguments
         else:
             eval -= piece_values[piece.piece_type]
+            eval -= evaluate_piece(piece, square)  # Pass piece and square arguments
     return eval
 
 def Minimax_Get_Move(game_state, depth, player_color, alpha, beta):
