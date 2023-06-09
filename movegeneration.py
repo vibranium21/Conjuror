@@ -1,11 +1,11 @@
 import chess
 import math
 piece_values = {
-    chess.PAWN: 150,
-    chess.ROOK: 490,
+    chess.PAWN: 100,
+    chess.ROOK: 500,
     chess.KNIGHT: 270,
-    chess.BISHOP: 330,
-    chess.QUEEN: 900,
+    chess.BISHOP: 340,
+    chess.QUEEN: 950,
     chess.KING: 20000
 }
 knight_piece_square_table = [
