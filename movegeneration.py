@@ -124,30 +124,28 @@ def evaluate(game_state):
 
 
 
-def Minimax_Get_Move(game_state, depth, player_color, alpha, beta):
-    if depth == 0 or game_state.is_game_over():
-        return None, evaluate(game_state)
+def Minimax_Get_Move(position, depth, player_color, alpha, beta):
+    if depth == 0 or position.is_game_over():
+        return None, evaluate(position)
 
-    legal_moves = list(game_state.legal_moves)
+    legal_moves = position.legal_moves
     best_move = None
+
+    # Check for captures or significant changes in the position
+    if depth <= 0 and (position.is_check() or position.is_capture() or position.is_checkmate()):
+        return None, evaluate(position)
+
     for move in legal_moves:
-        new_game_state = game_state.copy()
-        new_game_state.push(move)
+        position.push(move)
+        _, evaluation = Minimax_Get_Move(position, depth - 1, player_color, -beta, -alpha)
+        evaluation = -evaluation
+        position.pop()
 
-        _, evaluation = Minimax_Get_Move(new_game_state, depth - 1, player_color, alpha, beta)
-
-        if player_color == chess.WHITE:
-            if evaluation > alpha:
-                alpha = evaluation
-                best_move = move
-        else:
-            if evaluation < beta:
-                beta = evaluation
-                best_move = move
+        if evaluation > alpha:
+            alpha = evaluation
+            best_move = move
 
         if alpha >= beta:
             break
 
     return best_move, alpha
-
-    
