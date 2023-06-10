@@ -8,7 +8,7 @@
 
   # Issues:
   -Engine is very slow at high depth(expected but still unideal)
-  -Even at higher depths, occasionally makes very questionable moves.
+  -Plays waaaay worse as black
 
   # Future-Features:
   -Playing it on Lichess
