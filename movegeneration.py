@@ -1,5 +1,7 @@
 import chess
 import math
+
+
 piece_values = {
     chess.PAWN: 100,
     chess.ROOK: 500,
@@ -79,6 +81,9 @@ kingEvalWhite = [
 ]
 kingEvalBlack = list(reversed(kingEvalWhite))
 
+
+
+
 def evaluate_piece(piece: chess.Piece, square: chess.Square):
     mapping = []
     if piece.piece_type == chess.PAWN:
@@ -97,16 +102,10 @@ def evaluate_piece(piece: chess.Piece, square: chess.Square):
 
 
 
-    
-
-
-    
-
-
-def evaluate(game_state):
+def evaluate(position):
     eval = 0
     for square in chess.SQUARES:
-        piece = game_state.piece_at(square)
+        piece = position.piece_at(square)
         if not piece:
             continue
         if piece.color == chess.WHITE:
@@ -117,7 +116,20 @@ def evaluate(game_state):
             eval -= evaluate_piece(piece, square)  # Pass piece and square arguments
     return eval
 
+def order_moves(position, moves):
+    ordered_moves = []
+    
+    # Prioritize capturing moves
+    capturing_moves = []
 
+    for move in moves:
+        if position.is_capture(move):
+            capturing_moves.append(move)
+        else:
+            ordered_moves.append(move)
+    
+    ordered_moves.extend(capturing_moves)
+    return ordered_moves
 
 
 
@@ -126,9 +138,11 @@ def evaluate(game_state):
 
 def Minimax_Get_Move(position, depth, player_color, alpha, beta):
     if depth == 0 or position.is_game_over():
-        return None, evaluate(position)
+        return None, evaluate(position)  # Change 'None' to '0'
 
-    legal_moves = position.legal_moves
+    
+
+    legal_moves = order_moves(position, position.legal_moves)
     best_move = None
 
     # Check for captures or significant changes in the position
