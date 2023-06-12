@@ -135,13 +135,7 @@ def evaluate_piece(piece: chess.Piece, square: chess.Square):
 
 
 
-def evaluate(position: chess.Board):
-    if position.is_checkmate:
-        if position.turn == chess.WHITE:
-            return -math.inf
-        return math.inf
-    if position.is_stalemate:
-        return 0
+def evaluate(position):
     eval = 0
     BlackBishopsPair = BlackBishopPair(position)
     WhiteBishopsPair = WhiteBishopPair(position)
