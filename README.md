@@ -6,7 +6,8 @@
   -testing board to play engine on(although the engine is very slow on my intel i3)
   -Basic Evaluation(Piece values, Piece placement)
   # Level
-  - Recent-ish game : https://lichess.org/nng5o6z8
+  - Recent-ish games
+  -  : https://lichess.org/nng5o6z8 Obliteration of maia-1
   # Issues:
   -Engine is very slow at high depth(expected but still unideal)
   -Plays waaaay worse as black
