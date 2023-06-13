@@ -5,7 +5,8 @@
   -Minimax and AlphaBeta pruning
   -testing board to play engine on(although the engine is very slow on my intel i3)
   -Basic Evaluation(Piece values, Piece placement)
-
+  # Level
+  - Recent-ish game : https://lichess.org/nng5o6z8
   # Issues:
   -Engine is very slow at high depth(expected but still unideal)
   -Plays waaaay worse as black
