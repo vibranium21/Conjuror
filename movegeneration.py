@@ -193,19 +193,14 @@ def Minimax_Get_Move(position, depth, player_color, alpha, beta):
         _, evaluation = Minimax_Get_Move(position, depth - 1, player_color, -beta, -alpha)
         evaluation = -evaluation
         position.pop()
-        if player_color == chess.WHITE:
-            if evaluation > alpha:
-                alpha = evaluation
-                best_move = move
 
-            if alpha >= beta:
-                break
-        if player_color == chess.BLACK:
-            if evaluation < beta:
-                beta = evaluation
-                best_move = move
+        if evaluation > alpha:
+            alpha = evaluation
+            best_move = move
 
-            if alpha >= beta:
-                break
+      
+
+    return best_move, alpha
+
 
     return best_move, alpha
