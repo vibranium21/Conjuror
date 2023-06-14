@@ -197,6 +197,8 @@ def Minimax_Get_Move(position, depth, player_color, alpha, beta):
         if evaluation > alpha:
             alpha = evaluation
             best_move = move
+        if alpha >= beta:
+            break
 
       
 
