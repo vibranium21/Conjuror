@@ -153,7 +153,7 @@ def evaluate(position):
         else:
             eval -= piece_values[piece.piece_type]
             eval -= evaluate_piece(piece, square)  # Pass piece and square arguments
-    return eval
+    return eval if position.turn == chess.WHITE else  -eval
 
 def order_moves(position, moves):
     ordered_moves = []
@@ -199,8 +199,5 @@ def Minimax_Get_Move(position, depth, player_color, alpha, beta):
             best_move = move
 
       
-
-    return best_move, alpha
-
 
     return best_move, alpha
