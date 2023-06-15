@@ -9,8 +9,19 @@ piece_values = {
     chess.KNIGHT: 270,
     chess.BISHOP: 340,
     chess.QUEEN: 950,
-    chess.KING: 20000
+    chess.KING: 200000
 }
+kingEvalEndGame = [
+    -150, -30, -30, -30, -30, -30, -30, -150,
+    -30, -30,  0,  0,  0,  0, -30, -30,
+    -30, -10, 20, 30, 30, 20, -10, -30,
+    -30, -10, 30, 40, 40, 30, -10, -30,
+    -30, -10, 30, 40, 40, 30, -10, -30,
+    -30, -10, 20, 30, 30, 20, -10, -30,
+    -30, -20, -10,  0,  0, -10, -20, -30,
+    -150, -140, -70, -10, -10, -70, -140, -150
+]
+
 knight_piece_square_table = [
 -45, -30, -25, -25, -25, -25, -30, - 45,
 -30, -15, 0, 0, 0, 0, -15, -30,
@@ -128,10 +139,37 @@ def evaluate_piece(piece: chess.Piece, square: chess.Square):
     elif piece.piece_type == chess.QUEEN:
         mapping = queenEval
     elif piece.piece_type == chess.KING:
-        mapping = kingEvalWhite if piece.color == chess.WHITE else kingEvalBlack
+        if check_end_game:
+            mapping = kingEvalEndGame    
+        else:
+            mapping = kingEvalWhite if piece.color == chess.WHITE else kingEvalBlack
     elif piece.piece_type == chess.ROOK:
         mapping = rookEvalWhite if piece.color == chess.WHITE else rookEvalBlack
     return mapping[square]
+
+def check_end_game(board: chess.Board) -> bool:
+    """
+    Are we in the end game?
+    Per Michniewski:
+    - Both sides have no queens or
+    - Every side which has a queen has additionally no other pieces or one minorpiece maximum.
+    """
+    queens = 0
+    minors = 0
+
+    for square in chess.SQUARES:
+        piece = board.piece_at(square)
+        if piece and piece.piece_type == chess.QUEEN:
+            queens += 1
+        if piece and (
+            piece.piece_type == chess.BISHOP or piece.piece_type == chess.KNIGHT
+        ):
+            minors += 1
+
+    if queens == 0 or (queens == 2 and minors <= 1):
+        return True
+
+    return False
 
 
 
@@ -199,7 +237,6 @@ def Minimax_Get_Move(position, depth, player_color, alpha, beta):
             best_move = move
         if alpha >= beta:
             break
-
       
 
     return best_move, alpha
