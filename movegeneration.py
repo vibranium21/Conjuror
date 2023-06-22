@@ -148,12 +148,6 @@ def evaluate_piece(piece: chess.Piece, square: chess.Square):
     return mapping[square]
 
 def check_end_game(board: chess.Board) -> bool:
-    """
-    Are we in the end game?
-    Per Michniewski:
-    - Both sides have no queens or
-    - Every side which has a queen has additionally no other pieces or one minorpiece maximum.
-    """
     queens = 0
     minors = 0
 
