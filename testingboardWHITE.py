@@ -1,13 +1,12 @@
 import chess
 import math
 from movegeneration import Minimax_Get_Move
-
+from movegeneration import evaluate
 def play_game():
     board = chess.Board()
-
     while not board.is_game_over():
         move, _ = Minimax_Get_Move(board, 4, chess.WHITE, -math.inf, math.inf)
-        
+        print(move)
         if move is not None:
             board.push(move)
         
@@ -31,8 +30,6 @@ def play_game():
                 print("Invalid move format. Try again.")
 
         print(board)
+        print(evaluate(board)/100)
         print("\n-----------------\n")
-
 play_game()
-
-
