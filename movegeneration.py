@@ -1,7 +1,7 @@
 import chess
 import math
 
-safeKing = 75
+safeKing = 150
 bishopPair = 70
 piece_values = {
     chess.PAWN: 100,
@@ -125,27 +125,38 @@ def WhiteKingIsSafe(position):
     for square in chess.SQUARES:
         piece = position.piece_at(square)
         if piece is not None and  piece.piece_type == chess.KING and piece.color == chess.WHITE:
-            WhiteKingLocation = square
             if str(piece_map.get(square+9)) is not None and  not str(piece_map.get(square+9)).lower():
                 safe_king_score +=1
             if str(piece_map.get(square+8)) is not None and  not str(piece_map.get(square+8)).lower():
                 safe_king_score += 1
             if str(piece_map.get(square+7)) is not None and not str(piece_map.get(square+7)).lower():
                 safe_king_score += 1
+            if str(piece_map.get(square+16)) is not None and not str(piece_map.get(square+16)).lower():
+                safe_king_score -= 1
+            if str(piece_map.get(square+17)) is not None and not str(piece_map.get(square+17)).lower():
+                safe_king_score -= 1
+            if str(piece_map.get(square+15)) is not None and not str(piece_map.get(square+15)).lower():
+                safe_king_score -= 1
     return safe_king_score > 1
 def BlackKingIsSafe(position):
     piece_map = position.piece_map()
-    safe_king_score = 0
+    safe_king_scoreBlack = 0
     for square in chess.SQUARES:
         piece = position.piece_at(square)
         if piece is not None and  piece.piece_type == chess.KING and piece.color == chess.BLACK:
             if str(piece_map.get(square-9)) is not None and  not str(piece_map.get(square-9)).upper():
-                safe_king_score +=1
+                safe_king_scoreBlack +=1
             if str(piece_map.get(square-8)) is not None and  not str(piece_map.get(square-8)).upper():
-                safe_king_score += 1
+                safe_king_scoreBlack += 1
             if str(piece_map.get(square-7)) is not None and not str(piece_map.get(square-7)).upper():
-                safe_king_score += 1
-    return safe_king_score > 1
+                safe_king_scoreBlack += 1
+            if str(piece_map.get(square-16)) is not None and not str(piece_map.get(square-16)).lower():
+                safe_king_scoreBlack -= 1
+            if str(piece_map.get(square-17)) is not None and not str(piece_map.get(square-17)).lower():
+                safe_king_scoreBlack -= 1
+            if str(piece_map.get(square-15)) is not None and not str(piece_map.get(square-15)).lower():
+                safe_king_scoreBlack -= 1
+    return safe_king_scoreBlack > 1
             
 
 
@@ -154,7 +165,7 @@ def BlackKingIsSafe(position):
 
 
 
-def evaluate_piece(piece: chess.Piece, square: chess.Square):
+def evaluate_piece(piece: chess.Piece, square: chess.Square, position):
     mapping = []
     if piece.piece_type == chess.PAWN:
         mapping = white_pawn_table if piece.color == chess.WHITE else black_pawn_table
@@ -165,12 +176,12 @@ def evaluate_piece(piece: chess.Piece, square: chess.Square):
     elif piece.piece_type == chess.QUEEN:
         mapping = queenEval
     elif piece.piece_type == chess.KING:
-      #  if check_end_game(chess.Board):
-           # mapping = kingEvalEndGame    
-      #  else: Testing for bugs aroung these lines
-        if piece.color == chess.WHITE:
+        if check_end_game(position) == True:
+            mapping = kingEvalEndGame    
+        else: 
+            if piece.color == chess.WHITE:
                 mapping = kingEvalWhite
-        if piece.color == chess.BLACK:
+            if piece.color == chess.BLACK:
                 mapping = kingEvalBlack
     elif piece.piece_type == chess.ROOK:
         mapping = rookEvalWhite if piece.color == chess.WHITE else rookEvalBlack
@@ -198,6 +209,10 @@ def check_end_game(board: chess.Board):
 
 def evaluate(position):
     eval = 0
+    if position.is_stalemate():
+        return 0
+    if position.is_fivefold_repetition():
+        return 0
     if WhiteKingIsSafe(position):
         eval += safeKing
     else:
@@ -218,25 +233,27 @@ def evaluate(position):
             continue
         if piece.color == chess.WHITE:
             eval += piece_values[piece.piece_type]
-            eval += evaluate_piece(piece, square)  # Pass piece and square arguments
+            eval += evaluate_piece(piece, square, position)  # Pass piece and square arguments
         else:
             eval -= piece_values[piece.piece_type]
-            eval -= evaluate_piece(piece, square)  # Pass piece and square arguments
+            eval -= evaluate_piece(piece, square, position)  # Pass piece and square arguments
     return eval if position.turn == chess.WHITE else  -eval
 
 def order_moves(position, moves):
     ordered_moves = []
     
     # Prioritize capturing moves
-    capturing_moves = []
+    PotentiallyGood_moves = []
 
     for move in moves:
         if position.is_capture(move):
-            capturing_moves.append(move)
+            PotentiallyGood_moves.append(move)
+        if position.is_check():
+            PotentiallyGood_moves.append(move)
         else:
             ordered_moves.append(move)
     
-    ordered_moves.extend(capturing_moves)
+    ordered_moves.extend(PotentiallyGood_moves)
     return ordered_moves
 
 
@@ -245,10 +262,11 @@ def order_moves(position, moves):
 
 
 def Minimax_Get_Move(position, depth, player_color, alpha, beta):
-    movessearched  = 0
-    if depth == 0 or position.is_game_over():
-        return None, evaluate(position)  # Change 'None' to '0'
+    movessearched = 0
+    movessearched +=1
 
+    if depth == 0 or position.is_game_over():
+        return None, evaluate(position)  
     
 
     legal_moves = order_moves(position, position.legal_moves)
@@ -260,7 +278,7 @@ def Minimax_Get_Move(position, depth, player_color, alpha, beta):
 
     for move in legal_moves:
         position.push(move)
-        movessearched +=1
+        
         _, evaluation = Minimax_Get_Move(position, depth - 1, player_color, -beta, -alpha)
         evaluation = -evaluation
         position.pop()
@@ -270,5 +288,5 @@ def Minimax_Get_Move(position, depth, player_color, alpha, beta):
             best_move = move
         if alpha >= beta:
             break
-      
+                    
     return best_move, alpha
