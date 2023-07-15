@@ -209,6 +209,8 @@ def check_end_game(board: chess.Board):
 
 def evaluate(position):
     eval = 0
+    if position.is_checkmate():
+        return -math.inf
     if position.is_stalemate():
         return 0
     if position.is_fivefold_repetition():
